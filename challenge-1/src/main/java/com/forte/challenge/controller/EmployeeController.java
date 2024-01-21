@@ -2,15 +2,24 @@ package com.forte.challenge.controller;
 
 import com.forte.challenge.dto.request.EmployeeRequest;
 import com.forte.challenge.dto.request.EmployeeSearchCriteriaRequest;
-import com.forte.challenge.dto.response.ApiResponse;
+import com.forte.challenge.dto.response.ApiForteResponse;
 import com.forte.challenge.dto.response.EmployeeResponse;
 import com.forte.challenge.service.IEmployeeService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "Empleados", description = "Servicio para la gestión integral de empleados")
+@SecurityRequirement(name = "basicAuth")
 @RestController
 @RequestMapping("/employees")
 public class EmployeeController {
@@ -21,69 +30,73 @@ public class EmployeeController {
         this.service = service;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<EmployeeResponse>> getEmployeeById(@PathVariable Long id) {
+    @Operation(summary = "Obtener empleado por ID", description = "Devuelve los detalles de un empleado específico")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Empleado encontrado"),
+            @ApiResponse(responseCode = "404", description = "Empleado no encontrado", content = @Content(schema = @Schema(implementation = ApiForteResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Error en el servidor", content = @Content(schema = @Schema(implementation = ApiForteResponse.class)))
+    })
+    @GetMapping(value = "/{id}", produces = "application/json")
+    public ResponseEntity<EmployeeResponse> getEmployeeById(@PathVariable Long id) {
         EmployeeResponse employee = this.service.getEmployeeById(id);
-        ApiResponse<EmployeeResponse> response = ApiResponse.<EmployeeResponse>builder()
-                .success(Boolean.TRUE)
-                .data(employee)
-                .message("Empleado recuperado con éxito")
-                .build();
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(employee, HttpStatus.OK);
     }
 
-    @PostMapping
-    public ResponseEntity<ApiResponse<EmployeeResponse>> addEmployee(@RequestBody EmployeeRequest request) {
+    @Operation(summary = "Crear empleado", description = "Crea un empleado")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Empleado creado"),
+            @ApiResponse(responseCode = "500", description = "Error en el servidor", content = @Content(schema = @Schema(implementation = ApiForteResponse.class)))
+    })
+    @PostMapping(consumes = "application/json", produces = "application/json")
+    public ResponseEntity<EmployeeResponse> addEmployee(@RequestBody EmployeeRequest request) {
         EmployeeResponse newEmployee = this.service.saveEmployee(request);
-        ApiResponse<EmployeeResponse> response = ApiResponse.<EmployeeResponse>builder()
-                .success(Boolean.TRUE)
-                .data(newEmployee)
-                .message("Empleado agregado con éxito")
-                .build();
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(newEmployee, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<EmployeeResponse>> updateEmployee(@PathVariable Long id, @RequestBody EmployeeRequest request) {
+    @Operation(summary = "Actualizar empleado por ID", description = "Actualiza el empleado por ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Empleado actualizado"),
+            @ApiResponse(responseCode = "404", description = "Empleado no encontrado", content = @Content(schema = @Schema(implementation = ApiForteResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Error en el servidor", content = @Content(schema = @Schema(implementation = ApiForteResponse.class)))
+    })
+    @PutMapping(value = "/{id}", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<EmployeeResponse> updateEmployee(@PathVariable Long id, @RequestBody EmployeeRequest request) {
         EmployeeResponse updatedEmployee = this.service.updateEmployee(request, id);
-        ApiResponse<EmployeeResponse> response = ApiResponse.<EmployeeResponse>builder()
-                .success(Boolean.TRUE)
-                .data(updatedEmployee)
-                .message("Empleado actualizado con éxito")
-                .build();
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(updatedEmployee, HttpStatus.OK);
     }
 
+    @Operation(summary = "Eliminar empleado por ID", description = "Elimina el empleado por ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Empleado eliminado"),
+            @ApiResponse(responseCode = "404", description = "Empleado no encontrado", content = @Content(schema = @Schema(implementation = ApiForteResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Error en el servidor", content = @Content(schema = @Schema(implementation = ApiForteResponse.class)))
+    })
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> deleteEmployee(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
         this.service.deleteEmployee(id);
-        ApiResponse<Void> response = ApiResponse.<Void>builder()
-                .success(Boolean.TRUE)
-                .message("Empleado eliminado con éxito")
-                .build();
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping
-    public ResponseEntity<ApiResponse<List<EmployeeResponse>>> getAllEmployees() {
+    @Operation(summary = "Obtener empleados", description = "Devuelve los detalles de todos los empleados")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Empleados encontrados"),
+            @ApiResponse(responseCode = "500", description = "Error en el servidor", content = @Content(schema = @Schema(implementation = ApiForteResponse.class)))
+    })
+    @GetMapping(produces = "application/json")
+    public ResponseEntity<List<EmployeeResponse>> getAllEmployees() {
         List<EmployeeResponse> employees = this.service.getAllEmployees();
-        ApiResponse<List<EmployeeResponse>> response = ApiResponse.<List<EmployeeResponse>>builder()
-                .success(Boolean.TRUE)
-                .data(employees)
-                .message("Lista de empleados recuperada con éxito")
-                .build();
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(employees, HttpStatus.OK);
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<ApiResponse<List<EmployeeResponse>>> searchEmployees(EmployeeSearchCriteriaRequest criteria) {
+    @Operation(summary = "Búsqueda de empleados", description = "Devuelve los detalles de empleados por diferentes criterios como nombre, cargo, departamento, etc...")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Empleados encontrados"),
+            @ApiResponse(responseCode = "500", description = "Error en el servidor", content = @Content(schema = @Schema(implementation = ApiForteResponse.class)))
+    })
+    @GetMapping(value = "/search", produces = "application/json")
+    public ResponseEntity<List<EmployeeResponse>> searchEmployees(EmployeeSearchCriteriaRequest criteria) {
         List<EmployeeResponse> employees = this.service.searchEmployees(criteria);
-        ApiResponse<List<EmployeeResponse>> response = ApiResponse.<List<EmployeeResponse>>builder()
-                .success(Boolean.TRUE)
-                .data(employees)
-                .message("Resultados de la búsqueda")
-                .build();
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(employees);
     }
 
 }

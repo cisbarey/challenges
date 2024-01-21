@@ -14,4 +14,5 @@ public class EmployeeSearchCriteriaRequest {
     private String name;
     private String position;
     private String department;
+    private String email;
 }

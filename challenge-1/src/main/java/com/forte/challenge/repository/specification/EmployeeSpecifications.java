@@ -19,4 +19,9 @@ public class EmployeeSpecifications {
         return (employee, cq, cb) -> department == null ? cb.isTrue(cb.literal(true)) :
                 cb.like(employee.get("department"), "%" + department + "%");
     }
+
+    public static Specification<Employee> hasEmail(String email) {
+        return (employee, cq, cb) -> email == null ? cb.isTrue(cb.literal(true)) :
+                cb.like(employee.get("email"), "%" + email + "%");
+    }
 }

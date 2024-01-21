@@ -1,11 +1,9 @@
 package com.forte.challenge.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
@@ -23,5 +21,9 @@ public class Employee {
     private String position;
     private String department;
     private LocalDate dateOfJoining;
+    private BigDecimal salary;
+
+    @Column(unique = true)
+    private String email;
 
 }

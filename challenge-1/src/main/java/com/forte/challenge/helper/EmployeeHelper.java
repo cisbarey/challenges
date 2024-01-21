@@ -15,6 +15,8 @@ public class EmployeeHelper {
                 .dateOfJoining(employee.getDateOfJoining())
                 .department(employee.getDepartment())
                 .position(employee.getPosition())
+                .salary(employee.getSalary())
+                .email(employee.getEmail())
                 .build();
     }
 
@@ -24,6 +26,8 @@ public class EmployeeHelper {
         entity.setDateOfJoining(dto.getDateOfJoining());
         entity.setDepartment(dto.getDepartment());
         entity.setPosition(dto.getPosition());
+        entity.setSalary(dto.getSalary());
+        entity.setEmail(dto.getEmail());
         return entity;
     }
 }

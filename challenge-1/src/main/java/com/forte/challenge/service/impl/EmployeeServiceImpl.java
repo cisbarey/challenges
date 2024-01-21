@@ -60,6 +60,10 @@ public class EmployeeServiceImpl implements IEmployeeService {
             existingEmployee.setPosition(request.getPosition());
         if (request.getDateOfJoining() != null)
             existingEmployee.setDateOfJoining(request.getDateOfJoining());
+        if (request.getSalary() != null)
+            existingEmployee.setSalary(request.getSalary());
+        if (request.getEmail() != null)
+            existingEmployee.setEmail(request.getEmail());
 
         Employee updatedEmployee = this.repository.save(existingEmployee);
         return this.helper.convertToDTO(updatedEmployee);

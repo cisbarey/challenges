@@ -7,6 +7,7 @@ import com.forte.challenge.dto.response.EmployeeResponse;
 import java.util.List;
 
 public interface IEmployeeService {
+
     EmployeeResponse saveEmployee(EmployeeRequest request);
     List<EmployeeResponse> getAllEmployees();
     EmployeeResponse getEmployeeById(Long id);
