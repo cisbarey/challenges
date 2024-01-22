@@ -102,7 +102,7 @@ class EmployeeServiceImplTest {
         employee.setDepartment("IT");
         employee.setDateOfJoining(LocalDate.of(2022, 1, 1));
         employee.setSalary(new BigDecimal("100000"));
-        employee.setEmail("john.doe@example.com");
+        employee.setEmail("john.doe@forte.com");
 
         when(this.employeeRepository.findById(1L)).thenReturn(Optional.of(employee));
         when(this.employeeHelper.convertToDTO(any(Employee.class))).thenReturn(EmployeeResponse.builder()
@@ -111,7 +111,7 @@ class EmployeeServiceImplTest {
                         .department("IT")
                         .dateOfJoining(LocalDate.of(2022, 1, 1))
                         .salary(new BigDecimal("100000"))
-                        .email("john.doe@example.com")
+                        .email("john.doe@forte.com")
                         .build());
 
         EmployeeResponse result = this.employeeService.getEmployeeById(1L);
@@ -137,14 +137,14 @@ class EmployeeServiceImplTest {
                 "IT",
                 LocalDate.of(2022, 1, 1),
                 new BigDecimal("100000"),
-                "john.doe@example.com");
+                "john.doe@forte.com");
         EmployeeRequest updateRequest = EmployeeRequest.builder()
                 .name("Jane Doe")
                 .position("Senior Developer")
                 .department("IT")
                 .dateOfJoining(LocalDate.of(2022, 1, 1))
                 .salary(new BigDecimal("120000"))
-                .email("jane.doe@example.com")
+                .email("jane.doe@forte.com")
                 .build();
 
         when(this.employeeRepository.findById(existingEmployeeId)).thenReturn(Optional.of(existingEmployee));
@@ -184,7 +184,7 @@ class EmployeeServiceImplTest {
                 "IT",
                 LocalDate.of(2022, 1, 1),
                 new BigDecimal("100000"),
-                "john.doe@example.com");
+                "john.doe@forte.com");
 
         when(this.employeeRepository.findById(employeeIdToDelete)).thenReturn(Optional.of(existingEmployee));
 
@@ -207,14 +207,14 @@ class EmployeeServiceImplTest {
                         "IT",
                         LocalDate.of(2022, 1, 1),
                         new BigDecimal("100000"),
-                        "john.doe@example.com"),
+                        "john.doe@forte.com"),
                 new Employee(2L,
                         "Johnny Roe",
                         "Tester",
                         "IT",
                         LocalDate.of(2023, 1, 1),
                         new BigDecimal("90000"),
-                        "johnny.roe@example.com")
+                        "johnny.roe@forte.com")
         );
 
         when(this.employeeRepository.findAll(any(Specification.class))).thenReturn(matchingEmployees);

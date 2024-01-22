@@ -1,13 +1,15 @@
 package com.forte.challenge.controller;
 
+import com.forte.challenge.domain.Room;
 import com.forte.challenge.dto.request.ReservationRequest;
-import com.forte.challenge.dto.response.ApiResponse;
 import com.forte.challenge.dto.response.ReservationResponse;
 import com.forte.challenge.service.IReservationService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -21,57 +23,42 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<ReservationResponse>> createReservation(@RequestBody ReservationRequest request) {
+    public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationRequest request) {
         ReservationResponse newReservation = this.service.createReservation(request);
-        ApiResponse<ReservationResponse> response = ApiResponse.<ReservationResponse>builder()
-                .success(Boolean.TRUE)
-                .data(newReservation)
-                .message("Reserva creada exitosamente")
-                .build();
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(newReservation, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<ReservationResponse>> getReservationById(@PathVariable Long id) {
+    public ResponseEntity<ReservationResponse> getReservationById(@PathVariable Long id) {
         ReservationResponse reservation = this.service.getReservationById(id);
-        ApiResponse<ReservationResponse> response = ApiResponse.<ReservationResponse>builder()
-                .success(Boolean.TRUE)
-                .data(reservation)
-                .message("Reserva obtenida exitosamente")
-                .build();
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(reservation, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<ReservationResponse>> updateReservation(@PathVariable Long id, @RequestBody ReservationRequest request) {
+    public ResponseEntity<ReservationResponse> updateReservation(@PathVariable Long id, @RequestBody ReservationRequest request) {
         ReservationResponse updatedReservation = this.service.updateReservation(id, request);
-        ApiResponse<ReservationResponse> response = ApiResponse.<ReservationResponse>builder()
-                .success(Boolean.TRUE)
-                .data(updatedReservation)
-                .message("Reserva actualizada exitosamente")
-                .build();
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(updatedReservation, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> deleteReservation(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
         this.service.deleteReservation(id);
-        ApiResponse<Void> response = ApiResponse.<Void>builder()
-                .success(Boolean.TRUE)
-                .message("Reserva eliminada exitosamente")
-                .build();
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<ReservationResponse>>> getAllReservations() {
+    public ResponseEntity<List<ReservationResponse>> getAllReservations() {
         List<ReservationResponse> reservations = this.service.getAllReservations();
-        ApiResponse<List<ReservationResponse>> response = ApiResponse.<List<ReservationResponse>>builder()
-                .success(Boolean.TRUE)
-                .data(reservations)
-                .message("Todas las reservas obtenidas exitosamente")
-                .build();
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(reservations, HttpStatus.OK);
+    }
+
+    // En ReservationController.java
+    @GetMapping("/availability")
+    public ResponseEntity<List<Room>> getAvailableRooms(
+            @RequestParam("start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
+            @RequestParam("end") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
+        List<Room> availableRooms = service.getAvailableRooms(start, end);
+        return new ResponseEntity<>(availableRooms, HttpStatus.OK);
     }
 
 }

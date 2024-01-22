@@ -1,7 +1,7 @@
 package com.forte.challenge.helper;
 
-import com.forte.challenge.common.ReservationStatus;
 import com.forte.challenge.domain.Reservation;
+import com.forte.challenge.domain.Room;
 import com.forte.challenge.dto.request.ReservationRequest;
 import com.forte.challenge.dto.response.ReservationResponse;
 import org.springframework.stereotype.Component;
@@ -20,13 +20,12 @@ public class ReservationHelper {
                 .build();
     }
 
-    public Reservation convertToEntity(ReservationRequest request) {
+    public Reservation convertToEntity(ReservationRequest request, Room room) {
         return Reservation.builder()
                 .startDateTime(request.getStartDateTime())
                 .endDateTime(request.getEndDateTime())
-                // .room(buscarRoomPorId(request.getRoomId()))
+                .room(room)
                 .customerName(request.getCustomerName())
-                .status(ReservationStatus.PENDING)
                 .build();
     }
 
