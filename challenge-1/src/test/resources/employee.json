@@ -1,0 +1,8 @@
+{
+  "name": "John Doe",
+  "position": "Developer",
+  "department": "IT",
+  "dateOfJoining": "2022-01-01",
+  "salary": 100000,
+  "email": "john.doe@example.com"
+}
