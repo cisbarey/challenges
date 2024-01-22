@@ -5,9 +5,11 @@ import com.forte.challenge.domain.Reservation;
 import com.forte.challenge.domain.Room;
 import com.forte.challenge.dto.request.ReservationRequest;
 import com.forte.challenge.dto.response.ReservationResponse;
+import com.forte.challenge.dto.response.RoomResponse;
 import com.forte.challenge.exception.ReservationException;
 import com.forte.challenge.exception.ReservationNotFoundException;
 import com.forte.challenge.exception.RoomNotFoundException;
+import com.forte.challenge.helper.RoomHelper;
 import com.forte.challenge.repository.ReservationRepository;
 import com.forte.challenge.repository.RoomRepository;
 import com.forte.challenge.service.IReservationService;
@@ -26,13 +28,16 @@ public class ReservationService implements IReservationService {
     private final ReservationRepository repository;
     private final RoomRepository roomRepository;
     private final ReservationHelper helper;
+    private final RoomHelper roomHelper;
 
     public ReservationService(ReservationRepository repository,
                               RoomRepository roomRepository,
-                              ReservationHelper helper) {
+                              ReservationHelper helper,
+                              RoomHelper roomHelper) {
         this.repository = repository;
         this.roomRepository = roomRepository;
         this.helper = helper;
+        this.roomHelper = roomHelper;
     }
 
     @Override
@@ -128,7 +133,8 @@ public class ReservationService implements IReservationService {
     }
 
     @Override
-    public List<Room> getAvailableRooms(LocalDateTime start, LocalDateTime end) {
-        return roomRepository.findAvailableRooms(start, end);
+    public List<RoomResponse> getAvailableRooms(LocalDateTime start, LocalDateTime end) {
+        List<Room> rooms = roomRepository.findAvailableRooms(start, end);
+        return rooms.stream().map(roomHelper::toResponse).collect(Collectors.toList());
     }
 }

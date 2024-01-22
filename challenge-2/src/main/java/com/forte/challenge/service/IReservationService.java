@@ -1,8 +1,8 @@
 package com.forte.challenge.service;
 
-import com.forte.challenge.domain.Room;
 import com.forte.challenge.dto.request.ReservationRequest;
 import com.forte.challenge.dto.response.ReservationResponse;
+import com.forte.challenge.dto.response.RoomResponse;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,5 +13,5 @@ public interface IReservationService {
     void deleteReservation(Long id);
     ReservationResponse getReservationById(Long id);
     List<ReservationResponse> getAllReservations();
-    List<Room> getAvailableRooms(LocalDateTime start, LocalDateTime end);
+    List<RoomResponse> getAvailableRooms(LocalDateTime start, LocalDateTime end);
 }
